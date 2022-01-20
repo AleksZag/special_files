@@ -56,7 +56,7 @@ public class Main {
         }
         return list;
     }
-    
+
 
     public static List<Employee> parseXML(String fileName) throws IOException, SAXException, ParserConfigurationException {
         List<Employee> list = new ArrayList<>();
@@ -69,13 +69,15 @@ public class Main {
 
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node employee = nodeList.item(i);
-            Element e = (Element) employee;
-            String id = e.getElementsByTagName("id").item(0).getTextContent();
-            String firstName = e.getElementsByTagName("firstName").item(0).getTextContent();
-            String lastName = e.getElementsByTagName("lastName").item(0).getTextContent();
-            String country = e.getElementsByTagName("country").item(0).getTextContent();
-            String age = e.getElementsByTagName("age").item(0).getTextContent();
-            list.add(new Employee(Long.parseLong(id), firstName, lastName, country, Integer.parseInt(age)));
+            if (Node.ELEMENT_NODE == employee.getNodeType()) {
+                Element e = (Element) employee;
+                String id = e.getElementsByTagName("id").item(0).getTextContent();
+                String firstName = e.getElementsByTagName("firstName").item(0).getTextContent();
+                String lastName = e.getElementsByTagName("lastName").item(0).getTextContent();
+                String country = e.getElementsByTagName("country").item(0).getTextContent();
+                String age = e.getElementsByTagName("age").item(0).getTextContent();
+                list.add(new Employee(Long.parseLong(id), firstName, lastName, country, Integer.parseInt(age)));
+            }
 
         }
         return list;
@@ -83,7 +85,8 @@ public class Main {
 
 
     public static String listToJson(List<Employee> list) {
-        Type listType = new TypeToken<List<Employee>>() {}.getType();
+        Type listType = new TypeToken<List<Employee>>() {
+        }.getType();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         String json = gson.toJson(list, listType);
